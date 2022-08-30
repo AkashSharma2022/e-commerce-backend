@@ -35,7 +35,7 @@ exports.searchProduct = async (req, res, next) => {
                   })
             }
       } catch (error) {
-            next(error + error.message);
+            next(error);
       }
 }
 
