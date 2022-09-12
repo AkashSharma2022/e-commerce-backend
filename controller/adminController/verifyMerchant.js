@@ -1,5 +1,8 @@
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+const { StatusCodes
+, ReasonPhrases }  = require('http-status-codes');
+
 const myDb = require("../../models");
 
 exports.verifyMerchant = async (req, res, next) => {
@@ -8,7 +11,11 @@ exports.verifyMerchant = async (req, res, next) => {
       const isAdmin = [req.decoded.AdminId];
 
       if (!isAdmin) {
-            return res.status(201).json({
+            return res.status(401).json({
+                  status: 'UNAUTHORIZED',
+                  StatusCodes
+: StatusCodes
+.UNAUTHORIZED,
                   message: "You are not an admin",
             });
       }
@@ -65,10 +72,23 @@ exports.verifyMerchant = async (req, res, next) => {
                   }
             });
             return res.status(200).json({
+                  status: "OK",
+                  StatusCodes
+: StatusCodes
+.OK,
                   message: `You are verified and set password link sent to your email ${merchant[0].email}`,
                   token: theToken
             })
       } catch (error) {
             next(error);
+            res.status(StatusCodes
+.INTERNAL_SERVER_ERROR)
+                  .send({
+                        status: StatusCodes
+.INTERNAL_SERVER_ERROR,
+                        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+                        response: error.message
+,
+                  });
       }
 };

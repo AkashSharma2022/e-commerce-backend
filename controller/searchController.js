@@ -1,5 +1,8 @@
 const { Op } = require("sequelize")
 const myDb = require("../models")
+const { StatusCodes
+, ReasonPhrases }  = require('http-status-codes');
+
 
 exports.searchProduct = async (req, res, next) => {
       try {
@@ -25,17 +28,34 @@ exports.searchProduct = async (req, res, next) => {
 
             if (data.length) {
                   return res.status(200).json({
+                        status: "OK",
+                        StatusCodes
+: StatusCodes
+.OK,
                         message: "Searched product",
                         details: data
                   })
             }
             else {
-                  return res.json({
+                  return res.status(404).json({
+                        status: "NOT_FOUND",
+                        StatusCodes
+: StatusCodes
+.NOT_FOUND,
                         message: "not find anything"
                   })
             }
       } catch (error) {
-            next(error + error.message);
+            next(error);
+            res.status(StatusCodes
+.INTERNAL_SERVER_ERROR)
+                  .send({
+                        status: StatusCodes
+.INTERNAL_SERVER_ERROR,
+                        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+                        response: error.message
+,
+                  })
       }
 }
 

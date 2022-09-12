@@ -1,6 +1,6 @@
 module.exports = (myDb, DataTypes) => {
       let sub_category = myDb.define("sub_category", {
-            ub_category: DataTypes.STRING,
+            sub_category: DataTypes.STRING,
             Sub_categoryId: {
                   type: DataTypes.UUID,
                   defaultValue: DataTypes.UUIDV4,

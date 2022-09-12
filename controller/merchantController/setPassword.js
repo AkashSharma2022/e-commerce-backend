@@ -1,5 +1,8 @@
 const bcrypt = require('bcryptjs');
 const myDb = require('../../models');
+const { StatusCodes
+, ReasonPhrases }  = require('http-status-codes');
+
 
 exports.setPassword = async (req, res, next) => {
       try {
@@ -9,7 +12,11 @@ exports.setPassword = async (req, res, next) => {
                   }
             })
             if(!isMerchant){
-                  return res.status(422).json({
+                  return res.status(401).json({
+                        status: "UNAUTHORIZED",
+                        StatusCodes
+: StatusCodes
+.UNAUTHORIZED,
                         message: "You are not a merchant"
                   })
             }
@@ -23,10 +30,23 @@ exports.setPassword = async (req, res, next) => {
                   }
             })
             return res.status(200).json({
+                  status: "OK",
+                  StatusCodes
+: StatusCodes
+.OK,
                   message: "merchant password inserted"
             })
       }
-      catch (err) {
-            next(err);
+      catch (error) {
+            next(error);
+            res.status(StatusCodes
+.INTERNAL_SERVER_ERROR)
+                  .send({
+                        status: StatusCodes
+.INTERNAL_SERVER_ERROR,
+                        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+                        response: error.message
+,
+                  });
       }
 }

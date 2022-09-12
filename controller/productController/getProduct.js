@@ -1,4 +1,6 @@
 const myDb = require("../../models");
+const { StatusCodes, ReasonPhrases } = require('http-status-codes');
+
 
 exports.getProducts = async (req, res, next) => {
       try {
@@ -8,20 +10,24 @@ exports.getProducts = async (req, res, next) => {
                   limit: 10, offset: offset,
                   where: {
                         productStatus: 1
-                  },
-                  attributes: {
-                        exclude: ['ProductId', 'stocks',
-                              'productStatus', 'createdAt', 'updatedAt',
-                              'CategoryId', 'Sub_categoryId', 'MerchantId']
                   }
             }
             );
 
             return res.status(200).json({
+                  status: "OK",
+                  StatusCodes: StatusCodes.OK,
                   message: "All products details",
                   Details: row
             })
-      } catch (err) {
-            next(err);
+      } catch (error) {
+            next(error);
+            res.status(StatusCodes
+                  .INTERNAL_SERVER_ERROR).send({
+                        status: StatusCodes.INTERNAL_SERVER_ERROR,
+                        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+                        response: error.message
+                        ,
+                  });
       }
 }

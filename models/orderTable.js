@@ -10,7 +10,7 @@ module.exports = (mydb, DataTypes) => {
                   allowNull: false
             },
             userName: DataTypes.STRING,
-            TotalPayableAmount: DataTypes.INTEGER,
+            TotalPayableAmount: DataTypes.DECIMAL(10, 2),
             status: {
                   type: DataTypes.INTEGER,
                   defaultValue: 1
@@ -18,6 +18,10 @@ module.exports = (mydb, DataTypes) => {
             shippingCharge: {
                   type: DataTypes.INTEGER,
                   defaultValue: 0
+            },
+            paymentStatus: {
+                  type: DataTypes.BOOLEAN,
+                  defaultValue: false
             }
       })
       return order

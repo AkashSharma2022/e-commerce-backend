@@ -1,11 +1,17 @@
 const myDb = require("../models");
+const { StatusCodes, ReasonPhrases } = require('http-status-codes');
+
 
 exports.orderProduct = async (req, res, next) => {
       try {
             const isUser = req.decoded.UserId;
 
             if (!isUser) {
-                  return res.status(422).json({
+                  return res.status(401).json({
+                        status: 'UNAUTHORIZED',
+                        StatusCodes
+                              : StatusCodes
+                                    .UNAUTHORIZED,
                         message: "You are not an user"
                   })
             }
@@ -21,15 +27,16 @@ exports.orderProduct = async (req, res, next) => {
 
             const userData = await myDb.users.findAll({
                   where: {
-                        UserId: req.decoded.UserId
+                        UserId: isUser
                   }
             })
 
             const cartData = await myDb.addToCart.findAll({
                   where: {
-                        UserId: req.decoded.UserId
-                  }
+                        UserId: isUser
+                  }, raw: true
             })
+            console.log(cartData.length);
             if (cartData.length == 0) {
                   return res.json({
                         message: "Nothing is present in Cart"
@@ -38,11 +45,11 @@ exports.orderProduct = async (req, res, next) => {
 
             let total = 0;
             for (i = 0; i < cartData.length; i++) {
-                  total = total + cartData[i].dataValues.totalAmount;
+                  total = parseFloat(total) + parseFloat(cartData[i].totalAmount);
             }
-            // let totalAmount = cartData[0].totalAmount;
+
             let shippingCharge = 0;
-            if (total <= 1000) {
+            if (total < 1000) {
                   total = (total + 100);
                   shippingCharge = 100;
             }
@@ -54,17 +61,13 @@ exports.orderProduct = async (req, res, next) => {
                   TotalPayableAmount: total,
                   shippingCharge: shippingCharge
             })
-            // return res.json({
-            //       message: "order placed",
-            //       details: cartToOrders
-            // })
 
             let length = cartData.length;
             let arrObj = [];
             let index = 0;
 
             while (length != 0) {
-                  arrObj[index] = cartData[index].dataValues;
+                  arrObj[index] = cartData[index];
 
                   const merchantData = await myDb.product.findAll({
                         where: {
@@ -80,11 +83,11 @@ exports.orderProduct = async (req, res, next) => {
 
             await myDb.orderItem.bulkCreate(arrObj);
 
-            await myDb.addToCart.destroy({
-                  where: {
-                        UserId: req.decoded.UserId
-                  }
-            })
+            // await myDb.addToCart.destroy({
+            //       where: {
+            //             UserId: req.decoded.UserId
+            //       }
+            // })
 
             for (let i = 0; i < arrObj.length; i++) {
                   const productDetails = await myDb.product.findAll({
@@ -100,12 +103,19 @@ exports.orderProduct = async (req, res, next) => {
                   })
             }
 
-            return res.json({
+            return res.status(200).json({
+                  status: "OK",
+                  StatusCodes: StatusCodes.OK,
                   message: "order placed",
             })
 
 
       } catch (error) {
-            next(error)
+            next(error);
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+                  status: StatusCodes.INTERNAL_SERVER_ERROR,
+                  error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+                  response: error.message,
+            })
       }
 }

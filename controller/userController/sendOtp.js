@@ -2,6 +2,9 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require('../nodeMailer');
 const { Op } = require('sequelize');
 const myDb = require("../../models");
+const { StatusCodes
+, ReasonPhrases }  = require('http-status-codes');
+
 
 OTPFUN = () => {
       let numbers = "0123456789";
@@ -22,7 +25,11 @@ exports.sentOtp = async (req, res, next) => {
                   }
             });
             if (email.length != 0) {
-                  return res.status(201).json({
+                  return res.status(409).json({
+                        status: "CONFLICT",
+                        StatusCodes
+: StatusCodes
+.CONFLICT,
                         message: "The details already in use",
                   });
             }
@@ -57,14 +64,19 @@ exports.sentOtp = async (req, res, next) => {
                   'secret_key',
                   { expiresIn: "1h" }
             );
-            return res.json({
+            return res.status(200).json({
+                  status: "OK",
+                  StatusCodes
+: StatusCodes
+.OK,
                   token: theToken,
                   message: "OTP sent successfully.",
             });
 
 
 
-      } catch (err) {
-            console.log(err);
+      } catch (error) {
+            console.log(error)
+;
       }
 }

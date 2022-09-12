@@ -1,11 +1,18 @@
 const myDb = require("../../models");
+const { StatusCodes
+, ReasonPhrases }  = require('http-status-codes');
+
 
 exports.getUserAddress = async (req, res, next) => {
       try {
             const isUser = req.decoded.UserId;
             
             if(!isUser){
-                  return res.status(422).json({
+                  return res.status(401).json({
+                        status: "UNAUTHORIZED",
+                        StatusCodes
+: StatusCodes
+.UNAUTHORIZED,
                         message: "You are not an user"
                   })
             }
@@ -15,11 +22,15 @@ exports.getUserAddress = async (req, res, next) => {
                   }, attributes: {exclude: ['id', 'createdAt', 'updatedAt', 'Userid']}
             });
             return res.status(200).json({
+                  status: "OK",
+                  StatusCodes
+: StatusCodes
+.OK,
                   message: "Your all addresses ",
                   Details: address
             });
 
-      } catch (err) {
-            next(err.message);
+      } catch (error) {
+            next(error.message);
       }
 }

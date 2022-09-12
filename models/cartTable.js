@@ -6,12 +6,13 @@ module.exports = (mydb, DataTypes) => {
                   primaryKey: true
             },
             productName: DataTypes.STRING,
-            price: DataTypes.INTEGER,
+            price: DataTypes.STRING,
+            discountPercent: DataTypes.DECIMAL(10, 2),
             quantity: {
                   type: DataTypes.INTEGER,
                   defaultValue: 1,
             },
-            totalAmount: DataTypes.INTEGER,
+            totalAmount: DataTypes.DECIMAL(10, 2),
             status: {
                   type: DataTypes.INTEGER,
                   defaultValue: 1

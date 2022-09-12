@@ -7,7 +7,7 @@ module.exports = (mydb, DataTypes) => {
             },
             quantity: DataTypes.INTEGER,
             productName: DataTypes.STRING,
-            price: DataTypes.INTEGER,
+            price: DataTypes.DECIMAL(10, 2),
             totalAmount: DataTypes.INTEGER,
       })
       return orderItems

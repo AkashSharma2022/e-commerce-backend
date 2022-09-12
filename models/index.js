@@ -28,10 +28,11 @@ myDb.product = require('./productTable')(sequelize, DataTypes);
 myDb.order = require('./orderTable')(sequelize, DataTypes);
 myDb.addToCart = require('./cartTable')(sequelize, DataTypes);
 myDb.orderItem = require('./order-items')(sequelize, DataTypes);
+myDb.paymentDetails = require('./payment-table')(sequelize, DataTypes);
 
 
 
-myDb.sequelize.sync({ force: false })
+myDb.sequelize.sync({ alter: false })
       .then(() => {
             console.log("yes re-sync");
       })
@@ -118,5 +119,10 @@ myDb.order.hasMany(myDb.orderItem, { foreignKey: "OrderId" })
 myDb.orderItem.belongsTo(myDb.order, { foreignKey: "OrderId" })
 myDb.users.hasMany(myDb.order, { foreignKey: "UserId" })
 myDb.order.belongsTo(myDb.users, { foreignKey: "UserId" })
+
+myDb.paymentDetails.hasMany(myDb.order, { foreignKey: "PaymentDetailId" })
+myDb.order.belongsTo(myDb.paymentDetails, { foreignKey: "PaymentDetailId" })
+
+
 
 module.exports = myDb;
