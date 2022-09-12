@@ -1,6 +1,9 @@
 const myDb = require("../../models");
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
+const { StatusCodes
+, ReasonPhrases }  = require('http-status-codes');
+
 
 exports.verifyOtp = async (req, res, next) => {
 
@@ -33,7 +36,11 @@ exports.verifyOtp = async (req, res, next) => {
 
             if (isTokenExpired(token) == true) {
 
-                  return res.json({
+                  return res.status(504).json({
+                        status: "GATEWAY_TIMEOUT",
+                        StatusCodes
+: StatusCodes
+.GATEWAY_TIMEOUT,
                         message: "OTP Expired! Please try again"
                   })
             }
@@ -47,7 +54,11 @@ exports.verifyOtp = async (req, res, next) => {
             const hashPass = await bcrypt.hash(req.decoded.password, 12);
 
             if (otpdecoded.otp !== otp) {
-                  return res.status(422).json({
+                  return res.status(406).json({
+                        status: "NOT_ACCEPTABLE",
+                        StatusCodes
+: StatusCodes
+.NOT_ACCEPTABLE,
                         message: "Incorrect otp",
                   });
             }
@@ -68,14 +79,27 @@ exports.verifyOtp = async (req, res, next) => {
                               password: hashPass
                         }
                   );
-                  res.status(201).json({
+                  res.status(200).json({
+                        status: "OK",
+                        StatusCodes
+: StatusCodes
+.OK,
                         message: " Verified ",
                   })
 
             }
 
 
-      } catch (err) {
-            next(err);
+      } catch (error) {
+            next(error);
+            res.status(StatusCodes
+.INTERNAL_SERVER_ERROR)
+                  .send({
+                        status: StatusCodes
+.INTERNAL_SERVER_ERROR,
+                        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+                        response: error.message
+,
+                  });
       }
 }

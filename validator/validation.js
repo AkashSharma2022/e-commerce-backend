@@ -121,7 +121,29 @@ const validateOtp = (req, res, next) => {
 const updateProductValid = (req, res, next) => {
       const schema = Joi.object().keys({
             stocks: Joi.number(),
-            productPrice: Joi.number()
+            originalPrice: Joi.number(),
+            discountPercent: Joi.number()
+      })
+      const { error } = schema.validate(req.body, { abortEarly: false });
+      if (error) {
+            res.status(200).json(error.message);
+            console.log(error);
+      }
+      else {
+            console.log("next");
+            next();
+      }
+}
+const addProductValid = (req, res, next) => {
+      const schema = Joi.object().keys({
+            stocks: Joi.number().required(),
+            CategoryId: Joi.string().required(),
+            Sub_categoryId: Joi.string().required(),
+            productName: Joi.string().required(),
+            productDescription: Joi.string(),
+            HSNCode: Joi.number().required(),
+            originalPrice: Joi.number().required(),
+            discountPercent: Joi.number().required()
       })
       const { error } = schema.validate(req.body, { abortEarly: false });
       if (error) {
@@ -141,5 +163,6 @@ module.exports = {
       validationAddres,
       loginMerchant,
       validateOtp,
-      updateProductValid
+      updateProductValid,
+      addProductValid
 };

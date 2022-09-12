@@ -1,4 +1,7 @@
-const myDb = require("../../models")
+const myDb = require("../../models");
+const { StatusCodes
+, ReasonPhrases }  = require('http-status-codes');
+
 
 exports.removeFromCart = async (req, res, next) => {
       try {
@@ -9,14 +12,31 @@ exports.removeFromCart = async (req, res, next) => {
             })
             if (delcart) {
                   return res.status(200).json({
+                        status: "OK",
+                        StatusCodes
+: StatusCodes
+.OK,
                         message: "Removed From Cart"
                   })
             } else {
-                  return res.json({
+                  return res.status(401).json({
+                        status: "UNAUTHORIZED",
+                        StatusCodes
+: StatusCodes
+.UNAUTHORIZED,
                         message: "invalid CartId"
                   })
             }
-      } catch (err) {
-            next(err)
+      } catch (error) {
+            next(error);
+            res.status(StatusCodes
+.INTERNAL_SERVER_ERROR)
+                  .send({
+                        status: StatusCodes
+.INTERNAL_SERVER_ERROR,
+                        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+                        response: error.message
+,
+                  })
       }
 }

@@ -1,4 +1,7 @@
 const myDb = require("../../models");
+const { StatusCodes
+, ReasonPhrases }  = require('http-status-codes');
+
 
 exports.merchantReg = async (req, res, next) => {
 
@@ -9,7 +12,11 @@ exports.merchantReg = async (req, res, next) => {
                   }
             });
             if (email.length != 0) {
-                  return res.status(201).json({
+                  return res.status(409).json({
+                        status: "CONFLICT",
+                        StatusCodes
+: StatusCodes
+.CONFLICT,
                         message: "The details already in use",
                   });
             }
@@ -23,13 +30,26 @@ exports.merchantReg = async (req, res, next) => {
                         gstNumber: req.body.gstNumber
                   }
             );
-            res.status(201).json({
+            res.status(200).json({
+                  status: "OK",
+                  StatusCodes
+: StatusCodes
+.OK,
                   message: "verifivation under process will sent you mail soon",
             })
       }
 
 
-      catch (err) {
-            next(err);
+      catch (error) {
+            next(error);
+            res.status(StatusCodes
+.INTERNAL_SERVER_ERROR)
+                  .send({
+                        status: StatusCodes
+.INTERNAL_SERVER_ERROR,
+                        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+                        response: error.message
+,
+                  });
       }
 }

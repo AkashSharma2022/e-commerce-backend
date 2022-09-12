@@ -7,13 +7,16 @@ module.exports = (myDb, DataTypes) => {
 
             },
             productName: DataTypes.STRING,
-            productPrice: DataTypes.INTEGER,
+            productPrice: DataTypes.DECIMAL(10, 2),
+            discountPercent: DataTypes.DECIMAL(10, 2),
+            originalPrice: DataTypes.DECIMAL(10, 2),
             productDescription: DataTypes.STRING,
             stocks: DataTypes.INTEGER,
             productStatus: {
                   type: DataTypes.INTEGER,
                   defaultValue: 1
-            }
+            },
+            HSNCode: DataTypes.INTEGER
       })
       return product;
 

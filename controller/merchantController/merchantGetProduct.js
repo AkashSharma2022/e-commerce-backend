@@ -1,4 +1,6 @@
 const myDb = require("../../models");
+const { StatusCodes, ReasonPhrases } = require('http-status-codes');
+
 
 exports.merchantGetProduct = async (req, res, next) => {
 
@@ -10,26 +12,54 @@ exports.merchantGetProduct = async (req, res, next) => {
             });
 
             if (row.length === 0) {
-                  return res.status(422).json({
+                  return res.status(401).json({
+                        status: "UNAUTHORIZED",
+                        StatusCodes
+                              : StatusCodes
+                                    .UNAUTHORIZED,
                         message: "Invalid merchant",
                   });
             }
 
-            const merchantAllProducts = await myDb.product.findAll({
+            const attributes = {
+                  exclude: ['createdAt', 'updatedAt', 'CategoryId', 'Sub_categoryId', 'MerchantId']
+            }
+            let offset = (req.params.page - 1) * 10;
+
+            const productCount = await myDb.product.count({
                   where: {
                         MerchantId: req.decoded.MerchantId
-                  }, attributes: {
-                        exclude: ['ProductId', 'createdAt', 'updatedAt',
-                              'CategoryId', 'Sub_categoryId', 'MerchantId']
                   }
+            });
+
+            const merchantAllProducts = await myDb.product.findAll({
+                  limit: 10, offset: offset,
+                  where: {
+                        MerchantId: req.decoded.MerchantId
+                  },
+                  include: [{ model: myDb.sub_category, attributes },
+                  { model: myDb.category, attributes }], attributes
 
             })
             return res.status(200).json({
+                  status: "OK",
+                  StatusCodes: StatusCodes.OK,
                   message: "Merchant all products",
+                  totalProduct: productCount,
+                  currentPageProduct: merchantAllProducts.length,
                   Details: merchantAllProducts
             })
       }
-      catch (err) {
-            next(err);
+      catch (error) {
+            next(error);
+            res.status(StatusCodes
+                  .INTERNAL_SERVER_ERROR)
+                  .send({
+                        status: StatusCodes
+                              .INTERNAL_SERVER_ERROR,
+                        error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+                        response: error.message
+                        ,
+                  });
       }
 }

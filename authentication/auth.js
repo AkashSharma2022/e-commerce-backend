@@ -1,4 +1,8 @@
 const jwt = require('jsonwebtoken');
+const { StatusCodes
+, ReasonPhrases }  = require('http-status-codes');
+
+
 const authorize = {
       authorization: (req, res, next) => {
             if (
@@ -6,7 +10,11 @@ const authorize = {
                   !req.headers.authorization.startsWith('Bearer') ||
                   !req.headers.authorization.split(' ')[1]
             ) {
-                  return res.status(422).json({
+                  return res.status(403).json({
+                        status: "FORBIDDEN",
+                        StatusCodes
+: StatusCodes
+.FORBIDDEN,
                         message: "Please provide the token",
                   });
             }
@@ -15,17 +23,25 @@ const authorize = {
 
             if (isTokenExpired(token) == true) {
 
-                  return res.json({
+                  return res.status(401).json({
+                        status: "UNAUTHORIZED",
+                        StatusCodes
+: StatusCodes
+.UNAUTHORIZED,
                         message: "token expired"
                   })
             }
             if (token) {
                   token = token.split(" ")[1];
-                  jwt.verify(token, "secret_key", (err, decoded) => {
-                        console.log(err);
-                        if (err) {
-                              return res.json({
-                                    status: 404,
+                  jwt.verify(token, "secret_key", (error, decoded) => {
+;
+                        if (error)
+ {
+                              return res.status(400).json({
+                                    status: "BAD_REQUEST",
+                                    StatusCodes
+: StatusCodes
+.BAD_REQUEST,
                                     message: "Invalid token or unauthorised access"
                               })
                         }
@@ -35,8 +51,11 @@ const authorize = {
                         next();
                   })
             } else {
-                  res.json({
-                        status: 303,
+                  res.status(401).json({
+                        status: "UNAUTHORIZED",
+                        StatusCodes
+: StatusCodes
+.UNAUTHORIZED,
                         message: 'Please provide token'
                   });
             }
