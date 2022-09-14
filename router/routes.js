@@ -124,7 +124,7 @@ router.get('/cancel', Cancel);
 router.get('/razorPay', (req, res) => {
     res.sendFile("/home/user/e-commerce-backend/controller/razorpay/razorPay.html");
 })
-router.post('/create/orderId', razorPayCreateOrder);
-router.post('/api/payment/verify', paymentVerify);
+router.post('/create/orderId', jsonParser, razorPayCreateOrder);
+router.post('/api/payment/verify', jsonParser, paymentVerify);
 
 module.exports = router;
