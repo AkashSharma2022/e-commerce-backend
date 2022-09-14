@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const { Op } = require('sequelize');
 const myDb = require('../../models');
 const { StatusCodes
-, ReasonPhrases }  = require('http-status-codes');
+      , ReasonPhrases } = require('http-status-codes');
 
 
 exports.adminReg = async (req, res, next) => {
@@ -19,8 +19,8 @@ exports.adminReg = async (req, res, next) => {
                   return res.status(409).json({
                         status: 'CONFLICT',
                         StatusCodes
-: StatusCodes
-.CONFLICT,
+                              : StatusCodes
+                                    .CONFLICT,
                         message: "The details already in use",
                   });
             }
@@ -37,8 +37,8 @@ exports.adminReg = async (req, res, next) => {
             res.status(200).json({
                   status: "OK",
                   StatusCodes
-: StatusCodes
-.OK,
+                        : StatusCodes
+                              .OK,
                   message: "Admin data inserted successfully",
             })
       }
@@ -47,13 +47,13 @@ exports.adminReg = async (req, res, next) => {
       catch (error) {
             next(error);
             res.status(StatusCodes
-.INTERNAL_SERVER_ERROR)
+                  .INTERNAL_SERVER_ERROR)
                   .send({
                         status: StatusCodes
-.INTERNAL_SERVER_ERROR,
+                              .INTERNAL_SERVER_ERROR,
                         error: ReasonPhrases.INTERNAL_SERVER_ERROR,
                         response: error.message
-,
+                        ,
                   });
       }
 }

@@ -32,7 +32,7 @@ myDb.paymentDetails = require('./payment-table')(sequelize, DataTypes);
 
 
 
-myDb.sequelize.sync({ alter: false })
+myDb.sequelize.sync({ force: true })
       .then(() => {
             console.log("yes re-sync");
       })

@@ -3,6 +3,7 @@ const app = express();
 port = 8080;
 require('./models');
 require('./models/usersTable');
+require('./controller/razorpay/razorpay.controller')
 const routerReg = require('./router/routes');
 const bodyParser = require('body-parser');
 
@@ -110,5 +111,8 @@ router.post("/sendOtp", (req, res) => {
 app.listen(port, () => {
       console.log(`app is listening at port ${port}`);
 })
+
+
+
 
 app.use(routerReg);

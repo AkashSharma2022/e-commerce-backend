@@ -1,5 +1,5 @@
-module.exports = (mydb, DataTypes) => {
-      let merchant = mydb.define("merchant", {
+module.exports = (myDb, DataTypes) => {
+      let merchant = myDb.define("merchant", {
             MerchantId: {
                   type: DataTypes.UUID,
                   defaultValue: DataTypes.UUIDV4,
@@ -33,5 +33,5 @@ module.exports = (mydb, DataTypes) => {
                   type: DataTypes.STRING,
             }
       })
-      return merchant
+      return merchant;
 }

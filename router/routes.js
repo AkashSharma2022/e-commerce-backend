@@ -1,9 +1,9 @@
 const router = require('express').Router();
 
 const { validationS1, validationS2, validationAddres,
-      validationMerchant, loginMerchant, validateOtp,
-      updateProductValid,
-      addProductValid } = require('../validator/validation');
+    validationMerchant, loginMerchant, validateOtp,
+    updateProductValid,
+    addProductValid } = require('../validator/validation');
 
 const bodyParser = require('body-parser');
 const { authorization } = require('../authentication/auth');
@@ -56,6 +56,8 @@ const { userGetOrderedProduct } = require('../controller/userController/userGetO
 const { payment } = require('../controller/paymentController/payment.controller');
 const { addTocartInBulk, addProductInBulk } = require('../controller/cartController/addToCartInBulk');
 const { paypal, Success, Cancel } = require('../controller/paypal/paypal.controller');
+const { razorPayCreateOrder, paymentVerify } = require('../controller/razorpay/razorpay.controller');
+// const { razorPay } = require('../controller/razorpay/razorpay.controller');
 
 
 const jsonParser = bodyParser.json();
@@ -117,6 +119,12 @@ router.get('/success', Success);
 router.get('/cancel', Cancel);
 
 
+// razorPay 
 
+router.get('/razorPay', (req, res) => {
+    res.sendFile("/home/user/e-commerce-backend/controller/razorpay/razorPay.html");
+})
+router.post('/create/orderId', razorPayCreateOrder);
+router.post('/api/payment/verify', paymentVerify);
 
 module.exports = router;

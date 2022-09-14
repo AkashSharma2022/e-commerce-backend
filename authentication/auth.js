@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
-const { StatusCodes
-, ReasonPhrases }  = require('http-status-codes');
+const { StatusCodes, ReasonPhrases }  = require('http-status-codes');
+global.atob = require("atob");
 
 
 const authorize = {

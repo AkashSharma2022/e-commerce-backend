@@ -2,7 +2,7 @@ const myDb = require("../../models");
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const { StatusCodes
-, ReasonPhrases }  = require('http-status-codes');
+      , ReasonPhrases } = require('http-status-codes');
 
 
 exports.verifyOtp = async (req, res, next) => {
@@ -32,18 +32,18 @@ exports.verifyOtp = async (req, res, next) => {
 
             const token = getOtp;
 
-            const isTokenExpired = token => Date.now() >= (JSON.parse(atob(token.split('.')[1]))).exp * 1000
+            // const isTokenExpired = token => Date.now() >= (JSON.parse(atob(token.split('.')[1]))).exp * 1000
 
-            if (isTokenExpired(token) == true) {
+            // if (isTokenExpired(token) == true) {
 
-                  return res.status(504).json({
-                        status: "GATEWAY_TIMEOUT",
-                        StatusCodes
-: StatusCodes
-.GATEWAY_TIMEOUT,
-                        message: "OTP Expired! Please try again"
-                  })
-            }
+            //       return res.status(504).json({
+            //             status: "GATEWAY_TIMEOUT",
+            //             StatusCodes
+            //                   : StatusCodes
+            //                         .GATEWAY_TIMEOUT,
+            //             message: "OTP Expired! Please try again"
+            //       })
+            // }
 
             otp = req.body.giveotp;
             console.log(otp);
@@ -57,8 +57,8 @@ exports.verifyOtp = async (req, res, next) => {
                   return res.status(406).json({
                         status: "NOT_ACCEPTABLE",
                         StatusCodes
-: StatusCodes
-.NOT_ACCEPTABLE,
+                              : StatusCodes
+                                    .NOT_ACCEPTABLE,
                         message: "Incorrect otp",
                   });
             }
@@ -82,8 +82,8 @@ exports.verifyOtp = async (req, res, next) => {
                   res.status(200).json({
                         status: "OK",
                         StatusCodes
-: StatusCodes
-.OK,
+                              : StatusCodes
+                                    .OK,
                         message: " Verified ",
                   })
 
@@ -93,13 +93,13 @@ exports.verifyOtp = async (req, res, next) => {
       } catch (error) {
             next(error);
             res.status(StatusCodes
-.INTERNAL_SERVER_ERROR)
+                  .INTERNAL_SERVER_ERROR)
                   .send({
                         status: StatusCodes
-.INTERNAL_SERVER_ERROR,
+                              .INTERNAL_SERVER_ERROR,
                         error: ReasonPhrases.INTERNAL_SERVER_ERROR,
                         response: error.message
-,
+                        ,
                   });
       }
 }
